@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { useSession, signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 
 export default function Dashboard() {
   const { data: session, status } = useSession()
@@ -112,6 +113,19 @@ export default function Dashboard() {
         {/* Workout History */}
         <div>
           <h2 className="text-2xl font-bold mb-6">Workout History</h2>
+          {logs.length > 0 && (
+  <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 mb-6">
+    <h3 className="text-lg font-semibold mb-4">📊 Workouts This Week</h3>
+    <ResponsiveContainer width="100%" height={200}>
+      <BarChart data={logs.slice(0, 7).map((log, i) => ({ name: `Day ${i + 1}`, workouts: 1 }))}>
+        <XAxis dataKey="name" stroke="#9ca3af" />
+        <YAxis stroke="#9ca3af" />
+        <Tooltip />
+        <Bar dataKey="workouts" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+)}
           {logs.length === 0 ? (
             <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
               <div className="text-4xl mb-3">📊</div>
