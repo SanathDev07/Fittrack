@@ -27,6 +27,20 @@ export default function RoutinePage() {
     await fetch(`/api/routines/${params.id}`, { method: "DELETE" })
     router.push("/dashboard")
   }
+  const handleClone = async () => {
+  const res = await fetch("/api/routines/clone", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ routineId: params.id })
+  })
+  const data = await res.json()
+  if (res.ok) {
+    alert("Routine cloned! Check your dashboard.")
+    router.push("/dashboard")
+  } else {
+    alert(data.error)
+  }
+}
 
   const handleLog = async () => {
     setLogging(true)
@@ -95,6 +109,14 @@ export default function RoutinePage() {
               </button>
             </div>
           )}
+          {!isOwner && (
+  <button
+    onClick={handleClone}
+    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm"
+  >
+    🔁 Clone Routine
+  </button>
+)}
         </div>
 
         {/* Exercises */}
