@@ -15,6 +15,7 @@ model User {
   createdAt DateTime @default(now())
   routines     Routine[]
   workoutLogs  WorkoutLog[]
+  goal        Goal?
 }
 
 model Routine {
@@ -47,4 +48,15 @@ model WorkoutLog {
   userId      Int
   routine     Routine  @relation(fields: [routineId], references: [id])
   routineId   Int
+}
+
+model Goal {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @unique
+  user              User     @relation(fields: [userId], references: [id])
+  dailyCalorieTarget Int?
+  weeklyWorkoutTarget Int?
+  targetWeight      Float?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }

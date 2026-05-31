@@ -43,6 +43,7 @@ export default function Dashboard() {
         </Link>
         <div className="flex gap-4 items-center">
           <Link href="/routines" className="text-gray-400 hover:text-white transition">Browse</Link>
+          <Link href="/goals" className="text-gray-400 hover:text-white transition">Goals</Link>
           <span className="text-gray-400 text-sm">Hi, {session?.user?.name}!</span>
           <button onClick={() => signOut({ callbackUrl: "/" })} className="text-gray-400 hover:text-white transition text-sm">
             Sign Out
