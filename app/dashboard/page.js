@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [routines, setRoutines] = useState([])
   const [logs, setLogs] = useState([])
   const [loading, setLoading] = useState(true)
+  const [goal, setGoal] = useState(null)
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/auth/signin")
@@ -18,14 +19,16 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      Promise.all([
-        fetch("/api/dashboard/routines").then(r => r.json()),
-        fetch("/api/logs").then(r => r.json())
-      ]).then(([r, l]) => {
-        setRoutines(r)
-        setLogs(l)
-        setLoading(false)
-      })
+     Promise.all([
+  fetch("/api/dashboard/routines").then(r => r.json()),
+  fetch("/api/logs").then(r => r.json()),
+  fetch("/api/goals").then(r => r.json())
+]).then(([r, l, g]) => {
+  setRoutines(r)
+  setLogs(l)
+  setGoal(g)
+  setLoading(false)
+})
     }
   }, [status])
 
@@ -68,6 +71,34 @@ export default function Dashboard() {
           ))}
         </div>
 
+{goal && (
+  <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-12">
+    <h2 className="text-2xl font-bold mb-4">🎯 My Goals</h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {goal.dailyCalorieTarget && (
+        <div className="bg-gray-800 rounded-lg p-4">
+          <div className="text-gray-400 text-sm mb-1">Daily Calories</div>
+          <div className="text-2xl font-bold text-blue-400">{goal.dailyCalorieTarget}</div>
+          <div className="text-gray-400 text-xs">kcal target</div>
+        </div>
+      )}
+      {goal.weeklyWorkoutTarget && (
+        <div className="bg-gray-800 rounded-lg p-4">
+          <div className="text-gray-400 text-sm mb-1">Weekly Workouts</div>
+          <div className="text-2xl font-bold text-green-400">{logs.length} / {goal.weeklyWorkoutTarget}</div>
+          <div className="text-gray-400 text-xs">workouts this week</div>
+        </div>
+      )}
+      {goal.targetWeight && (
+        <div className="bg-gray-800 rounded-lg p-4">
+          <div className="text-gray-400 text-sm mb-1">Target Weight</div>
+          <div className="text-2xl font-bold text-purple-400">{goal.targetWeight} lbs</div>
+          <div className="text-gray-400 text-xs">goal weight</div>
+        </div>
+      )}
+    </div>
+  </div>
+)}
         {/* My Routines */}
         <div className="mb-12">
           <div className="flex justify-between items-center mb-6">
